@@ -1,4 +1,3 @@
-// xxx.ets
 import { webview } from '@kit.ArkWeb';
 import { FileManager } from "../utils/addFile"
 import { fileUri } from '@kit.CoreFileKit';
