@@ -1,14 +1,17 @@
 import { webview } from '@kit.ArkWeb';
-import { FileManager } from "../utils/addFile"
-import { fileUri } from '@kit.CoreFileKit';
-import util from '@ohos.util';
-import fileIo from '@ohos.file.fs'
-
 
 @Entry
 @Component
 struct WebComponent {
   controller: webview.WebviewController = new webview.WebviewController();
+
+  writeToHTML(text:string){
+
+    console.log(`text is here :${text}`)
+    console.log(`sendText(String.raw\`${text}\`);`)
+    console.log(`MathJax.Hub.Queue(["Typeset",MathJax.Hub,document.getElementById('mainContent')])`)
+    this.controller.runJavaScript(`sendText(String.raw\`${text}\`);`);
+  }
 
   build() {
     Column() {
@@ -25,13 +28,9 @@ struct WebComponent {
         })
       Button("click")
         .onClick(()=>{
-          let text = String.raw`函数 \( z = u^2 \ln v \)，其中 \( u = \frac{y}{x} \) 和 \( v = 3y - 2x \)。`
-          console.log(`text is here :${text}`)
-          console.log(`sendText(String.raw\`${text}\`);`)
-          console.log(`MathJax.Hub.Queue(["Typeset",MathJax.Hub,document.getElementById('mainContent')])`)
-          this.controller.runJavaScript(`sendText(String.raw\`${text}\`);`);
+          const text = String.raw `函数 \( z = u^2 \ln v \)，其中 \( u = \frac{y}{x} \) 和 \( v = 3y - 2x \)。`
+          this.writeToHTML(text);
         })
-
     }
   }
 }
