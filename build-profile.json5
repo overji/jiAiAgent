@@ -1,0 +1,55 @@
+{
+  "app": {
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "C:\\Users\\overji\\.ohos\\config\\default_jiHOS_5cjSdR4N8iNJ2equMuRikoC9OFd04RzS1rnc67us1ng=.cer",
+          "storePassword": "0000001B4EB1D6C0014D7C3D723334883755759689465309F63816EB4107AEDDF8B781F624B8BB874D3BD5",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001BCA4C5144EC6BD57021E3E94C7F134FB839492722BAF43916545607D6D27C7703B21B5C3D9A7C04",
+          "profile": "C:\\Users\\overji\\.ohos\\config\\default_jiHOS_5cjSdR4N8iNJ2equMuRikoC9OFd04RzS1rnc67us1ng=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "C:\\Users\\overji\\.ohos\\config\\default_jiHOS_5cjSdR4N8iNJ2equMuRikoC9OFd04RzS1rnc67us1ng=.p12"
+        }
+      }
+    ],
+    "products": [
+      {
+        "name": "default",
+        "signingConfig": "default",
+        "compatibleSdkVersion": "5.0.0(12)",
+        "runtimeOS": "HarmonyOS",
+        "buildOption": {
+          "strictMode": {
+            "caseSensitiveCheck": true,
+            "useNormalizedOHMUrl": true
+          }
+        }
+      }
+    ],
+    "buildModeSet": [
+      {
+        "name": "debug",
+      },
+      {
+        "name": "release"
+      }
+    ]
+  },
+  "modules": [
+    {
+      "name": "entry",
+      "srcPath": "./entry",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    }
+  ]
+}

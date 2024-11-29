@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>解数学题</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+  <meta charset="utf-8"/>
+</head>
+<body>
+<p id="mainContent">
+  6666666 如果 \(\{a_n\}\) 是等差数列，则 \( a_n = a + (n-1)d \)，其中 \( a \) 是首项，\( d \) 是公差。
+</p>
+<script>
+  function sendText(text){
+    // Convert HTML entities back to LaTeX syntax
+
+    document.getElementById('mainContent').innerHTML = text;
+    console.log("here is web")
+    console.log(text);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+  }
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    }
+  });
+
+  MathJax.Hub.Queue(function() {
+    // Render LaTeX after converting from Markdown
+    document.getElementById('mainContent').innerHTML = marked.parse(document.getElementById('mainContent').innerHTML);
+  });
+</script>
+</body>
+</html>
