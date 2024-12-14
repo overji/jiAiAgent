@@ -1,4 +1,4 @@
-# 在arkts上动态显示latex文本的一种方案
+_# 在arkts上动态显示latex文本的一种方案
 
 ##  1.代码实现
 **Index.ets :**
@@ -88,4 +88,4 @@ struct WebComponent {
 ## 3.原理说明
 大致思路即是:
 使用webview渲染html页面，调用sendText方法将文本插入html页面，
-调用mathJax，对页面上的latex文本进行渲染。
+调用mathJax，对页面上的latex文本进行渲染。_
