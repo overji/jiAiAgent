@@ -61,7 +61,7 @@ struct NewPage {
               this.text2Speech.stop()
             } else {
               this.readingAnswer = true;
-              this.text2Speech.speak(this.AIanswer.toString());
+              this.text2Speech.speak(this.getRecentText());
             }
           })
       }.height("7.5%");
@@ -87,6 +87,11 @@ struct NewPage {
 
   aboutToDisappear(): void {
     this.text2Speech.stop();
+  }
+
+  getRecentText(){
+    if(this.AIanswer.length == 0)return "";
+    return this.AIanswer[this.AIanswer.length-1].content;
   }
 
   aboutToAppear(): void {
@@ -117,6 +122,8 @@ struct NewPage {
         if(text !== ""){
           this.speechText = text;
           this.AIanswer = await this.openAI.aiResponse(text);
+          this.readingAnswer = true;
+          this.text2Speech.speak(this.getRecentText());
         }
       }
     })

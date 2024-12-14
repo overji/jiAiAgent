@@ -34,6 +34,12 @@ export class ApiText2Speech {
 
   // 调用speak播报方法
   public speak(text:string) {
+    if(text == ""){
+      emitter.emit({
+        eventId:1002,
+        priority:emitter.EventPriority.IMMEDIATE
+      })
+    }
     if(this.ttsEngine == undefined)return;
     let speakListener: textToSpeech.SpeakListener = {
       // 开始播报回调
