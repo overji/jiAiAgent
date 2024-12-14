@@ -6,7 +6,14 @@
         "usedScene": {
           "when": "always"
         }
-      }
+      },
+      {
+        "name": "ohos.permission.MICROPHONE",
+        "reason": "$string:app_name",
+        "usedScene": {
+          "when": "always"
+        }
+      },
     ],
     "name": "entry",
     "type": "entry",

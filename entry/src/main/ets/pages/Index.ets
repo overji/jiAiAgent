@@ -1,36 +1,86 @@
-import { webview } from '@kit.ArkWeb';
+import {AudioPlayer} from '../utils/AudioPlayer';
+import {AudioRecorder} from '../utils/AudioRecorder';
+import {ApiText2Speech} from '../utils/textToSpeech';
+import {ApiSpeechToText} from '../utils/speechToText'
+import { emitter } from '@kit.BasicServicesKit';
 
 @Entry
 @Component
-struct WebComponent {
-  controller: webview.WebviewController = new webview.WebviewController();
-
-  writeToHTML(text:string){
-
-    console.log(`text is here :${text}`)
-    console.log(`sendText(String.raw\`${text}\`);`)
-    console.log(`MathJax.Hub.Queue(["Typeset",MathJax.Hub,document.getElementById('mainContent')])`)
-    this.controller.runJavaScript(`sendText(String.raw\`${text}\`);`);
-  }
+struct Index{
+  @State private start:boolean = false;
+  @State private startRecord:boolean = false;
+  @State private pauseRecord:boolean = false;
+  @State private speechText:string = "hello";
+  private audioPlayer:AudioPlayer = new AudioPlayer();
+  private audioRecorder:AudioRecorder = new AudioRecorder();
+  private text2Speech:ApiText2Speech = new ApiText2Speech();
 
   build() {
-    Column() {
-      // 加载沙箱路径文件。
-      Web({
-        src: $rawfile("output.html"),
-        controller: this.controller
-      })
-        .height("50%")
-        .onConsole((event)=>{
-          console.log('getMessage:'+event.message.getMessage());
-          console.log('getMessageLevel:'+event.message.getMessageLevel());
-          return false;
-        })
-      Button("click")
+    Column(){
+      ApiSpeechToText()
+        .height("25%");
+      Button((this.startRecord)?"结束录音":"开始录音")
+        .onClick(()=> {
+          if (this.startRecord) {
+            this.audioRecorder.stopAudioRecorder();
+          } else {
+            this.audioRecorder.startAudioRecorder();
+          }
+          this.startRecord = !this.startRecord;
+        });
+      if(this.startRecord){
+        Button((this.pauseRecord)?"重启录音":"暂停录音")
+          .onClick(()=>{
+            if(this.pauseRecord){
+              this.audioRecorder.resumeAudioRecorder();
+            } else {
+              this.audioRecorder.pauseAudioRecorder();
+            }
+            this.pauseRecord = !this.pauseRecord;
+          })
+      }
+      Button((this.start)?"点我暂停":"点我开始播放")
         .onClick(()=>{
-          const text = String.raw `函数 \( z = u^2 \ln v \)，其中 \( u = \frac{y}{x} \) 和 \( v = 3y - 2x \)。`
-          this.writeToHTML(text);
+          if(this.start)
+          {
+            this.audioPlayer.stopAVPlayer();
+          }
+          else
+          {
+            if(this.audioRecorder.isRecordOK())
+            {
+              this.audioPlayer.avPlayerUrl(this.audioRecorder.getRecordFileName());
+            }
+            else
+            {
+              this.audioPlayer.avPlayerFdSrc();
+            }
+          }
+          this.start = !this.start;
+        });
+
+      Button(this.speechText)
+        .onClick(()=>{
+          if(!this.text2Speech.isBusy()){
+            this.text2Speech.speak(this.speechText);
+          }
         })
     }
   }
+
+  aboutToAppear(): void {
+    emitter.on({
+      eventId: 17145,                      // 指定事件ID
+      priority: emitter.EventPriority.HIGH // 事件优先级
+    }, (data) => {
+      let dict= data["data"];
+      if(dict != undefined){
+        let text:string = dict["VoiceText"];
+        if(text !== ""){
+          this.speechText = text;
+        }
+      }
+    })
+  }
 }
+

@@ -1,0 +1,43 @@
+{
+  "module": {
+    "requestPermissions": [
+      {
+        "name": "ohos.permission.INTERNET",
+        "usedScene": {
+          "when": "always"
+        }
+      },
+      {
+        "name": "ohos.permission.MICROPHONE",
+        "reason": "$string:app_name",
+        "usedScene": {
+          "when": "always"
+        }
+      },
+    ],
+    "name": "aiAgent",
+    "type": "feature",
+    "description": "$string:module_desc",
+    "mainElement": "AiAgentAbility",
+    "deviceTypes": [
+      "phone",
+      "tablet",
+      "2in1"
+    ],
+    "deliveryWithInstall": true,
+    "installationFree": false,
+    "pages": "$profile:main_pages",
+    "abilities": [
+      {
+        "name": "AiAgentAbility",
+        "srcEntry": "./ets/aiagentability/AiAgentAbility.ets",
+        "description": "$string:AiAgentAbility_desc",
+        "icon": "$media:layered_image",
+        "label": "$string:AiAgentAbility_label",
+        "startWindowIcon": "$media:startIcon",
+        "startWindowBackground": "$color:start_window_background",
+        "exported": true
+      }
+    ]
+  }
+}

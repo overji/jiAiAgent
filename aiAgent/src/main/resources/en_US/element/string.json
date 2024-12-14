@@ -1,0 +1,16 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "module description"
+    },
+    {
+      "name": "AiAgentAbility_desc",
+      "value": "description"
+    },
+    {
+      "name": "AiAgentAbility_label",
+      "value": "label"
+    }
+  ]
+}
