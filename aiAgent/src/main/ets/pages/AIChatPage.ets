@@ -24,7 +24,7 @@ struct NewPage {
   @State private speechText:string = "";
   @State private AIanswer:Array<Message> = [];
   private text2Speech:ApiText2Speech = new ApiText2Speech();
-  private openAI:historyOpenAI = new historyOpenAI();
+  private openAI:historyOpenAI = new historyOpenAI(this.question);
 
 
   build() {
@@ -116,7 +116,7 @@ struct NewPage {
         let text:string = dict["VoiceText"];
         if(text !== ""){
           this.speechText = text;
-          this.AIanswer = await this.openAI.aiResponse(this.question,text);
+          this.AIanswer = await this.openAI.aiResponse(text);
         }
       }
     })

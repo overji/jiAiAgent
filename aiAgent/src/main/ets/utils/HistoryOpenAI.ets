@@ -1,10 +1,8 @@
 import { EnvStore } from '../utils/EnvStore';import http from '@ohos.net.http';
-import List from '@ohos.util.List';
 import { BusinessError, emitter } from '@kit.BasicServicesKit';
 
 const baseUrl = EnvStore.GetInstance().get("openai_baseurl")
 const apiKey = EnvStore.GetInstance().get("openai_apikey")
-const maxSize = 10
 
 export interface Message{
   role:string,
@@ -19,7 +17,7 @@ interface ExtraData{
 
 export class historyOpenAI
 {
-  private maxSize = 10
+  private question:string = "";
   private extraData:ExtraData = {
     model: "gpt-4o-mini",
     messages: [],
@@ -34,8 +32,14 @@ export class historyOpenAI
     extraData:this.extraData
   }
 
-  questionAndProblem(question:string,problem: string){
-    return problem;
+  private historyMessages:Message[] = [];
+
+  constructor(question:string) {
+    this.addToMessage("system",this.getQuestionPrompt(question))
+    this.question = question;
+  }
+
+  getQuestionPrompt(question:string){
     return "请你作为一位经验丰富的教师，针对以下题目进行详细解答和作答批改。请严格按照要求组织内容：\n" +
       "\n" +
       "1. **解答规范**\n" +
@@ -53,15 +57,16 @@ export class historyOpenAI
       "- 改进建议要有针对性和可操作性\n" +
       "\n" +
       "题目是：\n" + question +
-      "学生疑问：\n" + problem +
       "\n" +
-      "请开始你的解答。"
+      "我下面将要给出一系列有关这个题目的疑问，请你做出回答"
   }
 
-  async aiResponse(question:string,studentProblem:string): Promise<Message[]>
+
+
+  async aiResponse(studentProblem:string): Promise<Message[]>
   {
     // let result:object | undefined = await this.completion(this.questionAndProblem(question,studentProblem));
-    let result = await this.completion(this.questionAndProblem(question,studentProblem)).catch((err:BusinessError)=>{
+    let result = await this.completion(studentProblem).catch((err:BusinessError)=>{
       console.error(`Failed to completion, err name: ${err.name}, err code: ${err.code}`)
     });
     if (!result) {
@@ -69,8 +74,8 @@ export class historyOpenAI
     }
     let str:string = JSON.stringify(result);
     let text = Object(result)["choices"][0]["message"]["content"] as string;
-    this.addToMessage("system",text);
-    return this.extraData.messages;
+    this.addToMessage("assistant",text);
+    return this.historyMessages;
   }
 
   async completion(prompt: string): Promise<object | undefined> {
@@ -92,8 +97,11 @@ export class historyOpenAI
   }
 
   addToMessage(role:string,content:string){
-    if(this.extraData.messages.length > 2*this.maxSize){
-      this.extraData.messages = [];
+    if(role == "user" || role == "assistant"){
+      this.historyMessages.push({
+        "role":role,
+        "content":content
+      })
     }
     this.extraData.messages.push({
       "role":role,
